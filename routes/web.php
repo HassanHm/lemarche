@@ -107,6 +107,8 @@ Route::get('listNotification', ['as' => 'notification.listNotification', 'uses' 
 Route::get('addNotification', ['as' => 'notification.addNotification', 'uses' => 'App\Http\Controllers\ProjectController@addNotification']);
 Route::post('addNewNotification',['as' => 'notification.addNewNotification', 'uses' => 'App\Http\Controllers\ProjectController@addNewNotification']);
 Route::get('deleteNotification/{id}',['as' => 'notification.deleteNotification', 'uses' => 'App\Http\Controllers\ProjectController@deleteNotification']);
+Route::get('editNotification/{id}', ['as' => 'notification.editNotification', 'uses' => 'App\Http\Controllers\ProjectController@editNotification']);
+Route::post('updateNotification',['as' => 'notification.updateNotification', 'uses' => 'App\Http\Controllers\ProjectController@updateNotification']);
 
 // Start Banner Route-------------------------------------------------------------->
 

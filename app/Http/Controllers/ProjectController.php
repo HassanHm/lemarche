@@ -376,6 +376,41 @@ public function addNewNotification(Request $request)
     return redirect()->route('notification.addNotification')->withErrors($message);
 }
 
+public function editNotification(Request $request)
+{
+    $editNotification = DB::table('notification_tbl')
+    ->leftJoin('users', 'users.id', 'notification_tbl.user_id')
+    ->where('notification_tbl.notification_id', $request->id)
+    ->first();
+
+   
+
+    $listUser = DB::table('users')->orderBy('id', 'desc')->get();
+    $listProduct = DB::table('product_tbl')->orderBy('product_id', 'desc')->get();
+
+
+    return view('notification.editNotification')->with('editNotification', $editNotification)
+                                              ->with('listUser', $listUser)
+                                              ->with('listProduct', $listProduct);
+ 
+}
+
+
+public function updateNotification(Request $request)
+{
+    $updateNotification =
+        DB::table('notification_tbl')->where('notification_id', $request->notification_id)
+                                 ->update([
+                                    'notification_title' => $request->notification_title,
+                                    'notification_descr' => $request->notification_descr,
+                                    'user_id' => $request->user_id,
+                                    'product_id' => $request->product_id
+
+                                             ]);
+    $message = "Record has been updated successfully";
+
+    return redirect()->back()->withErrors($message);
+}
 
 
 // BANNER FUNCTIONS --------------------------------------------------------------->
