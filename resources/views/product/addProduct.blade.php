@@ -30,9 +30,22 @@
                     @csrf
                     <div class="pl-lg-4">
 
+
+
+
+                    <label for="id_label_multiple"> Select Values  </label>
+
+  <select class="js-example-basic-multiple js-states form-control select2" id="id_label_multiple" multiple="multiple">
+                                
+                                @foreach ($listVal as $key=>$b)
+                                <option value="{{$b->value_id}}">{{$b->attribute_name}} -- {{$b->value_name}}</option>
+                                @endforeach
+  </select>
+
+
                     <div class="form-group">
                             <label for="exampleFormControlSelect1">Select Subcategory</label>
-                            <select class="form-control select2" id="subcategory" name="subcategory_id" required>
+                            <select class="form-control select2" id="subcategory" name="subcategory_id"  required>
                                 <option value="">Select</option>
 
                                 @foreach ($listSub as $key=>$b)

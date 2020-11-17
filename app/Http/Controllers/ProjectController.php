@@ -260,8 +260,13 @@ public function listProduct()
 public function addProduct(Request $request)
 {
     $listSub = DB::table('subcategory_tbl')->orderBy('subcategory_id', 'desc')->get();
+    // $listAttr = DB::table('attribute_tbl')->orderBy('attribute_id', 'desc')->get();
+    $listVal = DB::table('value_tbl')
+    ->leftJoin('attribute_tbl', 'attribute_tbl.attribute_id', 'value_tbl.attribute_id')
+    ->orderBy('value_id', 'desc')->get();
   
-      return view('product.addProduct')->with('listSub', $listSub);
+      return view('product.addProduct')->with('listSub', $listSub)
+                                       ->with('listVal', $listVal);
 
 }
 
