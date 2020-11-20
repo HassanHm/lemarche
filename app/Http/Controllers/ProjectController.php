@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
-
+use File;
 class ProjectController extends Controller
 {
 
@@ -333,7 +333,8 @@ public function addNewProduct(Request $request)
         'product_name' => $request->product_name,
         'subcategory_id' => $request->subcategory_id,
         'product_quantity' => $request->product_quantity,
-        'product_price' => $request->product_price
+        'product_price' => $request->product_price,
+        'product_descr' => $request->product_descr
 
     ]);
     $message = "Record has been added successfully, Please Add An Image";
@@ -360,41 +361,76 @@ public function addImg(Request $request)
 public function uploadImg(Request $request)
     {
        
-        $image = $request->file('file');
-        $imageName = $image->getClientOriginalName();
-        $image->move(public_path('images'),$imageName);
-        
-    
-        return response()->json(['success'=>$imageName]);
+         $product_id=$request->product_id;
+        $res= [];
+        $product_im ;
+        $sort = 0;
+        $sortC = DB::table('product_image_tbl')->where('product_id',$product_id)->orderBy('sort','desc')->first();
+       if($sortC){
+           $sort = $sortC->sort;
+       }
+        	if($request->hasFile('file')){
+ 
+            	$cars_pictures = $request->file;
+            foreach ($cars_pictures as $i => $a) {
+            $image = $a;
+			$fileName = time().'.'.$image->getClientOriginalName();
+			$image->move('resources/assets/images/product_images/', $fileName);
+			$uploadImage = 'resources/assets/images/product_images/'.$fileName; 
+			$car_im = DB::table('product_image_tbl')->insertGetId([
+			    'product_id'=>$product_id,
+			   	'product_image_img'=>$uploadImage,
+			   	'sort'=>$sort+1
+					]);	
+            }
+        }
+   $images=  DB::table('product_image_tbl as tkbl')->orderBy('tkbl.sort', 'asc')->where('product_id',$product_id)->get();
+   foreach ($images as $i => $a) {
+           $a->size = File::size($a->product_image_img);
+             $a->name = File::name($a->product_image_img);
+       }
+       return response()->json(['success'=>$images,'res'=>$res]);
+
     }
  
- function fetchImg()
-    {
-     $images = \File::allFiles(public_path('images'));
-     $output = '<div class="row">';
-     foreach($images as $image)
-     {
-      $output .= '<div class="col-md-2">
-                <img src="'.asset('images/' . $image->getFilename()).'" class="img-thumbnail" width="150" height="150"/>
-                <button type="button" class="btn btn-link remove_image" id="'.$image->getFilename().'">Remove</button>
-            </div>';
-     }
-     $output .= '</div>';
-     echo $output;
-    }
+ 
  
     function deleteImg(Request $request)
     {
-        $filename =  $request->get('filename');
-        ImageUpload::where('filename',$filename)->delete();
-        $path=public_path().'/images/'.$filename;
-        if (file_exists($path)) {
+        
+       $imgs=  DB::table('product_image_tbl')->where('product_image_id',$request->id)->get();
+          foreach ( $imgs as $i => $a) {
+      
+        $path=public_path().'/'.$a->product_image_img;
+       // if (file_exists($path)) {
             unlink($path);
-        }
-        return $filename;  
+        //}
+          }
+     DB::table('product_image_tbl')->where('product_image_id',$request->id)->delete();
+            
+
+        // $filename =  $request->get('filename');
+        // ImageUpload::where('filename',$filename)->delete();
+        // $path=public_path().'/images/'.$filename;
+        // if (file_exists($path)) {
+        //     unlink($path);
+        // }
+         return response()->json(['success'=>$path]);
+        
     }
 
+	    public function sortImages(Request $request){
+	        $im = json_decode($request->data,true);
+  foreach ($im['imgQ']  as $i => $a) {
+     DB::table('product_image_tbl')->where('product_image_id',$a['id'])->update([
+         'sort'=>$a['sort'] +1
+         ]);
+}
+             return response()->json(['success'=>$im['imgQ']  ]);
 
+// return redirect()->back()->withErrors('تمّت العملية بنجاح ');
+
+	}
 public function editProduct(Request $request)
 {
     $editProduct = DB::table('product_tbl')->where('product_id', $request->id)->first();
@@ -414,7 +450,8 @@ public function updateProduct(Request $request)
                                     'product_name' => $request->product_name,
                                     'product_quantity' => $request->product_quantity,
                                     'product_price' => $request->product_price,
-                                    'subcategory_id' => $request->subcategory_id
+                                    'subcategory_id' => $request->subcategory_id,
+        'product_descr' => $request->product_descr
 
                                              ]);
     $message = "Record has been updated successfully";
@@ -759,13 +796,16 @@ public function deleteCity(Request $request)
 }
 
 // Order FUNCTIONS --------------------------------------------------------------->
-public function listOrder()
+public function listOrder(Request $request)
 {
-
+    $order_number=$request->q;
     $listOrder = DB::table('order_tbl')
                         ->leftJoin('address_tbl', 'address_tbl.address_id', 'order_tbl.address_id')
                         ->leftJoin('users', 'users.id', 'order_tbl.user_id')
                         ->orderBy('order_id', 'desc')
+                        ->when($order_number, function ($query, $order_number) {
+                            return $query->where('order_tbl.order_number', $order_number);
+                        })
                         ->paginate(10);
 
     return view('order.listOrder')->with('listOrder', $listOrder);
@@ -776,7 +816,7 @@ public function listOrder()
 public function addOrder(Request $request)
 {
 
-    $users = DB::table('users')->orderBy('id', 'desc')->get();
+    $users = DB::table('users')->where('type','2')->orderBy('id', 'desc')->get();
     $address = DB::table('address_tbl')->orderBy('address_id', 'desc')->get();
 
     return view('order.addOrder')->with('users', $users)

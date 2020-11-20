@@ -28,9 +28,7 @@
             <div class="col-md-12">
 
             <div class="container-fluid">
-      <br />
-    <h3 align="center">Drag And Drop File Upload In Laravel 7 Using Dropzone Js</h3>
-    <br />
+   
         
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -40,14 +38,14 @@
  
 <input type="hidden" id="product_id" name="product_id" value="{{$result['data']}}" />
 
-                  
-<form method="post" action="{{url('product.uploadImg')}}" enctype="multipart/form-data" 
+            
+<form method="post" action="{{url('uploadImg')}}" enctype="multipart/form-data" 
                 class="dropzone" id="dropzone">
-                @csrf
+              
    </form>   
-          <!-- <div align="center">
+           <div align="center">
             <button type="button" class="btn btn-info" id="submit-all">Upload</button>
-          </div> -->
+          </div> 
         </div>
       </div>
       <br />
@@ -66,9 +64,10 @@
 @push('js')
 <script type="text/javascript">
  
-$(document).ready(function(){
-
+ 
 	var x=document.getElementById("product_id").value ;
+	
+	console.log(x)
         Dropzone.options.dropzone =
          {
             renameFile: function(file) {
@@ -76,35 +75,37 @@ $(document).ready(function(){
                 var time = dt.getTime();
                return time ;
             },
-            dictDefaultMessage:"ارفع الصور"
+            dictDefaultMessage:"Add Product Images"
             ,            uploadMultiple:true,
+              parallelUploads: 10,
             addRemoveLinks:true,
             autoProcessQueue:false,
-            dictRemoveFile: 'حذف',
+            // dictRemoveFile: "Delete",
          headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-            dictRemoveFileConfirmation:'هل انت متأكد من الحذف؟',
+            dictRemoveFileConfirmation:'Are you sure you want to delete image؟',
             acceptedFiles: ".jpeg,.jpg,.png,.gif",
-            params: {'car_id':x},
+            params: {'product_id':x},
             removedfile : function(file, response) {
              myDropzone = this;
             file.previewElement.remove();
 
-            // $.ajax({
-            //     type: 'POST',
-            //     url: 'deleteProductsImage',
-            //     params:{id: file.name , car_id :{!!$result['data']!!}},
-            //     data: {id: file.name , car_id :{!!$result['data']!!}},
-            //     dataType: 'html',
-            //      success: function(data){
-                   
+            $.ajax({
+                type: 'POST',
+                url: 'deleteImg',
+                   headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                params:{id: file.name , product_id :{!!$result['data']!!}},
+                data: {id: file.name , product_id :{!!$result['data']!!}},
+                dataType: 'html',
+                 success: function(data){
+                   console.log(data)
  
-            //      },
-            //      error:function(data){
+                 },
+                 error:function(data){
                      
-            //      }
-            // }) 
+                 }
+            }) 
             },
             success: function(file, response) 
             {
@@ -126,6 +127,14 @@ $(document).ready(function(){
  
  
  
+      let a =  {!! $result['product_images'] !!}  ;
+ 
+    $.each(a, function (key, value) {
+        var file = { name: value.product_image_id, size: value.size };
+        console.log(file)
+         myDropzone.displayExistingFile(  file,  "http://127.0.0.1:8000/" + value.product_image_img)
+ 
+      })
         this.on('completemultiple', function () {
        
         });
@@ -153,13 +162,14 @@ $(document).ready(function(){
        $.ajax({
                 type: 'POST',
                 url: 'sortImages',
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                  data:{ data:JSON.stringify({imgQ})}
             }) 
      }, 
                 });
             
 
-});
+ 
 
  
 </script>

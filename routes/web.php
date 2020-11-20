@@ -105,8 +105,8 @@ Route::get('deleteProduct/{id}',['as' => 'product.deleteProduct', 'uses' => 'App
 Route::get('addImg/{id}', ['as' => 'product.addImg', 'uses' => 'App\Http\Controllers\ProjectController@addImg']);
 Route::post('uploadImg',['as' => 'product.uploadImg', 'uses' => 'App\Http\Controllers\ProjectController@uploadImg']);
 Route::get('fetchImg', ['as' => 'product.fetchImg', 'uses' => 'App\Http\Controllers\ProjectController@fetchImg']);
-Route::post('deleteImg', ['as' => 'product.deleteImg', 'uses' => 'App\Http\Controllers\ProjectController@deleteImg']);
-
+Route::post('addImg/deleteImg', ['as' => 'product.deleteImg', 'uses' => 'App\Http\Controllers\ProjectController@deleteImg']);
+ Route::post('addImg/sortImages', ['as' => 'product.sortImages', 'uses' => 'App\Http\Controllers\ProjectController@sortImages']);
 // Start Notification Route-------------------------------------------------------------->
 
 Route::get('listNotification', ['as' => 'notification.listNotification', 'uses' => 'App\Http\Controllers\ProjectController@listNotification']);

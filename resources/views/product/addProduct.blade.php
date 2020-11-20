@@ -33,10 +33,55 @@
 
                     <div class="pl-lg-4">
 
-
-
 <div class="form-group">
-                    <label for="id_label_multiple"> Select Values  </label>
+
+  <label for="id_label_multiple"> Select Category </label>
+
+<select class="js-example-basic-multiple js-states form-control select2" id="subcategory" name="subcategory_id">
+                              <option value="">Select</option>
+                              @foreach ($listCat as $key=>$f)
+                              <optgroup label="{{$f->category_name}}">
+                              @foreach ($listSub as $key=>$b)
+                              @if($f->category_id == $b->category_id )
+                              
+                              <option value="{{$b->subcategory_id}}">{{$b->subcategory_name}}</option>
+                  @endif
+                              @endforeach
+                              </optgroup>
+                              @endforeach
+
+</select>
+</div>
+
+       <div class="form-group">
+                            <label class="form-control-label" for="input-name">Name </label>
+                             
+                            <input type="text" name="product_name" id="input-name"
+                                class="form-control form-control-alternative"
+                                placeholder="{{ __('Enter Here Product Name ') }}"   required >
+
+                        </div>
+
+
+          <div class="form-group">
+                            <label class="form-control-label" for="input-name">Quantity </label>
+                             
+                            <input type="number" name="product_quantity" id="input-name"
+                                class="form-control form-control-alternative"
+                                placeholder="{{ __('Enter Here Quantity') }}"  required >
+
+                        </div>
+                        
+                                <div class="form-group">
+                            <label class="form-control-label" for="input-name">Price </label>
+                             
+                            <input type="number" name="product_price" id="input-name"
+                                class="form-control form-control-alternative"
+                                placeholder="{{ __('Enter Here Price') }}"  required >
+
+                        </div>
+<div class="form-group">
+                    <label for="id_label_multiple"> Select Attributes  </label>
 
   <select class="js-example-basic-multiple js-states form-control select2" id="id_label_multiple" multiple="multiple">
                                 
@@ -55,53 +100,18 @@
   </select>
 </div>
 
-<div class="form-group">
-
-  <label for="id_label_multiple"> Select Subcategory </label>
-
-<select class="js-example-basic-multiple js-states form-control select2" id="subcategory" multiple="multiple">
-                              
-                              @foreach ($listCat as $key=>$f)
-                              <optgroup label="{{$f->category_name}}">
-                              @foreach ($listSub as $key=>$b)
-                              @if($f->category_id == $b->category_id )
-                              
-                              <option value="{{$b->subcategory_id}}">{{$b->subcategory_name}}</option>
-                  @endif
-                              @endforeach
-                              </optgroup>
-                              @endforeach
-
-</select>
+      
+     <div class="form-group">
+                            <label class="form-control-label" for="input-Description">Description </label>
+                       
+                                   <textarea id="editor" class="editor" name="product_descr"></textarea>
+         
 </div>
-
-
                  
-                        <div class="form-group">
-                            <label class="form-control-label" for="input-name">Name </label>
-                             
-                            <input type="text" name="product_name" id="input-name"
-                                class="form-control form-control-alternative"
-                                placeholder="{{ __('Enter Here Product Name ') }}" value="{{ old('product_name') }}" required >
+            
 
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-control-label" for="input-name">Quantity </label>
-                             
-                            <input type="number" name="product_quantity" id="input-name"
-                                class="form-control form-control-alternative"
-                                placeholder="{{ __('Enter Here Quantity') }}" value="{{ old('product_quantity') }}" required >
-
-                        </div>
-                        <div class="form-group">
-                            <label class="form-control-label" for="input-name">Price </label>
-                             
-                            <input type="number" name="product_price" id="input-name"
-                                class="form-control form-control-alternative"
-                                placeholder="{{ __('Enter Here Price') }}" value="{{ old('product_price') }}" required >
-
-                        </div>
+              
+                
                         
                         
                         <div class="text-center">
@@ -119,3 +129,11 @@
 </div>
 
 @endsection
+
+@push('js')
+ 
+      <script>
+                        CKEDITOR.replace( 'editor' );
+                 </script>
+
+@endpush
