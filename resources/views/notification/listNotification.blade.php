@@ -52,7 +52,7 @@
                                         <th scope="col">{{ __('#') }}</th>
                                         <th scope="col">{{ __('Notification Title') }}</th>
                                         <th scope="col">{{ __('Notification Description') }}</th>
-                                        <th scope="col">{{ __(' User') }}</th>
+                                        <!-- <th scope="col">{{ __(' User') }}</th> -->
                                         <th scope="col">{{ __(' Product') }}</th>
                                         <th scope="col">{{ __(' Action') }}</th>
 
@@ -65,7 +65,7 @@
                                             <td>{{ $key+1}} </td>
                                             <td>{{ $user->notification_title}} </td>
                                             <td>{{ $user->notification_descr}} </td>
-                                            <td>{{ $user->name}} </td>
+                                            <!-- <td>{{ $user->name}} </td> -->
                                             <td>{{ $user->product_name}} </td>
 
                                             <td >
@@ -77,6 +77,7 @@
                                             
                                             <a href="editNotification/{{$user->notification_id}}" class="btn btn-success btn-fab btn-fab-mini btn-round" role="button" aria-disabled="true">
                                              <i class="material-icons">edit</i></a>
+                                             
 
 
                                 

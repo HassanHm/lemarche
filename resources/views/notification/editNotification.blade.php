@@ -29,16 +29,7 @@
 
                     <div class="pl-lg-4">
                     
-                    <div class="form-group">
-                            <label for="exampleFormControlSelect1">Select User</label>
-                            <select class="form-control select2" id="cate" name="user_id" required>
-                                <option value="">Select</option>
-
-                                @foreach ($listUser as $key=>$b)
-                                <option @if($editNotification->user_id ==$b->id ) selected @endif value="{{$b->id}}">{{$b->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                   
                         <div class="form-group">
                             <label for="exampleFormControlSelect1">Select Product</label>
                             <select class="form-control select2" id="cate1" name="product_id" required>

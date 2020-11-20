@@ -5,36 +5,54 @@
       Tip 2: you can also add an image using data-image tag
   -->
   <div class="logo">
-    <a href="https://creative-tim.com/" class="simple-text logo-normal">
-      {{ __('Creative Tim') }}
+    <a href="#" class="simple-text logo-normal">
+      {{ __('LeMarche') }}
     </a>
   </div>
   <div class="sidebar-wrapper">
     <ul class="nav">
    
       <li class="nav-item {{ ($activePage == 'profile' || $activePage == 'user-management') ? ' active' : '' }}">
-        <a class="nav-link" data-toggle="collapse" href="#laravelExample" aria-expanded="true">
+        <!-- <a class="nav-link" data-toggle="collapse" href="#laravelExample" aria-expanded="true">
           <i><img style="width:25px" src="{{ asset('material') }}/img/laravel.svg"></i>
           <p>{{ __('User Control') }}
             <b class="caret"></b>
           </p>
-        </a>
+        </a> -->
         <div class="collapse show" id="laravelExample">
           <ul class="nav">
-            <li class="nav-item{{ $activePage == 'profile' ? ' active' : '' }}">
+            <!-- <li class="nav-item{{ $activePage == 'profile' ? ' active' : '' }}">
               <a class="nav-link" href="{{ route('profile.edit') }}">
                 <span class="sidebar-mini"> UP </span>
                 <span class="sidebar-normal">{{ __('User profile') }} </span>
               </a>
-            </li>
-            <li class="nav-item{{ $activePage == 'user-management' ? ' active' : '' }}">
+            </li> -->
+            <!-- <li class="nav-item{{ $activePage == 'user-management' ? ' active' : '' }}">
               <a class="nav-link" href="{{ route('user.index') }}">
                 <span class="sidebar-mini"> UM </span>
                 <span class="sidebar-normal"> {{ __('User Management') }} </span>
               </a>
-            </li>
+            </li> -->
           </ul>
         </div>
+      
+
+
+        <li class="nav-item{{ $activePage == 'listBanner' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('banner.listBanner') }}">
+          <i class="material-icons">language</i>
+            <p>{{ __('Banners') }}</p>
+        </a>
+      </li>
+
+    
+
+      <li class="nav-item{{ $activePage == 'listCity' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('city.listCity') }}">
+          <i class="material-icons">location_ons</i>
+            <p>{{ __('City') }}</p>
+        </a>
+      </li>
       
       <li class="nav-item{{ $activePage == 'listCategory' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('category.listCategory') }}">
@@ -56,13 +74,8 @@
             <p>{{ __('Attributes') }}</p>
         </a>
       </li>
-      <li class="nav-item{{ $activePage == 'listNotification' ? ' active' : '' }}">
-        <a class="nav-link" href="{{ route('notification.listNotification') }}">
-          <i class="material-icons">notifications</i>
-            <p>{{ __('Notifications') }}</p>
-        </a>
-      </li>
-     
+
+
       <li class="nav-item{{ $activePage == 'listProduct' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('product.listProduct') }}">
           <i class="material-icons">star</i>
@@ -76,19 +89,9 @@
         </a>
       </li>
 
-      <li class="nav-item{{ $activePage == 'listCity' ? ' active' : '' }}">
-        <a class="nav-link" href="{{ route('city.listCity') }}">
-          <i class="material-icons">location_ons</i>
-            <p>{{ __('City') }}</p>
-        </a>
-      </li>
+     
 
-      <li class="nav-item{{ $activePage == 'listBanner' ? ' active' : '' }}">
-        <a class="nav-link" href="{{ route('banner.listBanner') }}">
-          <i class="material-icons">language</i>
-            <p>{{ __('Banners') }}</p>
-        </a>
-      </li>
+      
        <li class="nav-item{{ $activePage == 'listDboy' ? ' active' : '' }}">
         <a class="nav-link" href="{{ route('dboy.listDboy') }}">
           <i class="info material-icons">accessibility_new</i>
@@ -96,6 +99,12 @@
         </a>
       </li>
      
+      <li class="nav-item{{ $activePage == 'listNotification' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('notification.listNotification') }}">
+          <i class="material-icons">notifications</i>
+            <p>{{ __('Notifications') }}</p>
+        </a>
+      </li>
      
     </ul>
   </div>

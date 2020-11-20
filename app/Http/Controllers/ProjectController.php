@@ -167,8 +167,14 @@ public function listAttribute()
 {
 
     $listAttribute = DB::table('attribute_tbl')
-                        ->orderBy('attribute_id', 'desc')
+                   
+                        ->orderBy('attribute_tbl.attribute_id', 'desc')
                         ->paginate(10);
+
+ 
+    foreach(  $listAttribute as $k=>$a){
+        $a->va  = implode(" , ",DB::table('value_tbl')->where('attribute_id',$a->attribute_id)->pluck('value_name')->toArray());
+    }
 
     return view('attribute.listAttribute')->with('listAttribute', $listAttribute);
 }
@@ -212,14 +218,52 @@ public function addNewAttribute(Request $request)
 public function editAttribute(Request $request)
 {
     $editAttribute = DB::table('attribute_tbl')->where('attribute_id', $request->id)->first();
-
-    return view('attribute.editAttribute')->with('editAttribute', $editAttribute);
+    $listVal = DB::table('value_tbl')->where('attribute_id', $request->id)->get();
+    //->pluck('value_name')->toArray();;
+    //  $values=  implode(', ',$listVal);
+    return view('attribute.editAttribute')
+                                ->with('editAttribute', $editAttribute)
+                                ->with('listVal', $listVal);
  
 }
 
 
+
+public function addValue(Request $request)
+{
+    $editAttribute = DB::table('attribute_tbl')->where('attribute_id', $request->id)->first();
+
+    return view('attribute.addValue')->with('editAttribute', $editAttribute);
+                               
+ 
+}
+
+public function updateValue(Request $request)
+{
+$values=  explode(',', $request->attribute_values);
+  
+foreach($values as  $v)
+{
+  DB::table('value_tbl')->insertGetId([
+      'attribute_id'=>$request->attribute_id,
+      'value_name'=>$v 
+
+  ]);
+}
+
+$message = "Record has been updated successfully";
+
+return redirect()->back()->withErrors($message);
+}
+
 public function updateAttribute(Request $request)
 {
+
+      DB::table('value_tbl')->where('value_id', $request->value_id)
+                            ->update([
+                            'value_name'=>$request->value_name
+     
+                            ]);
     $attribute_update =
         DB::table('attribute_tbl')->where('attribute_id', $request->attribute_id)
                                  ->update([
@@ -259,13 +303,25 @@ public function listProduct()
 
 public function addProduct(Request $request)
 {
-    $listSub = DB::table('subcategory_tbl')->orderBy('subcategory_id', 'desc')->get();
+    // $listSub = DB::table('subcategory_tbl')->orderBy('subcategory_id', 'desc')->get();
     // $listAttr = DB::table('attribute_tbl')->orderBy('attribute_id', 'desc')->get();
     $listVal = DB::table('value_tbl')
-    ->leftJoin('attribute_tbl', 'attribute_tbl.attribute_id', 'value_tbl.attribute_id')
-    ->orderBy('value_id', 'desc')->get();
+    ->orderBy('value_id', 'asc')
+    ->get();
+    $listAttr = DB::table('attribute_tbl')
+    ->orderBy('attribute_name', 'asc')
+    ->get();
+   $listSub = DB::table('subcategory_tbl')
+    ->orderBy('subcategory_id', 'asc')
+    ->get();
+    $listCat = DB::table('category_tbl')
+    ->orderBy('category_name', 'asc')
+    ->get();
+ 
   
       return view('product.addProduct')->with('listSub', $listSub)
+                                       ->with('listCat', $listCat)
+                                       ->with('listAttr', $listAttr)
                                        ->with('listVal', $listVal);
 
 }
@@ -273,18 +329,70 @@ public function addProduct(Request $request)
 public function addNewProduct(Request $request)
 {
 
-    $attributeAdd = DB::table('product_tbl')->insertGetId([
+    $id = DB::table('product_tbl')->insertGetId([
         'product_name' => $request->product_name,
         'subcategory_id' => $request->subcategory_id,
         'product_quantity' => $request->product_quantity,
         'product_price' => $request->product_price
 
     ]);
-    $message = "Record has been added successfully";
+    $message = "Record has been added successfully, Please Add An Image";
 
-    return redirect()->route('product.addProduct')->withErrors($message);
+    return redirect()->route('product.addImg',compact('id'))->withErrors($message);
+    // return redirect()->route('addCarImages',compact('id'));
+
 }
 
+public function addImg(Request $request)
+{
+    $result = array();
+      $result['product_images']=  DB::table('product_image_tbl as tkbl')->orderBy('tkbl.sort', 'asc')->where('product_id',$request->id)->get();
+      
+       foreach ( $result['product_images'] as $i => $a) {
+           $a->size = File::size($a->product_image_img);
+             $a->name = File::name($a->product_image_img);
+       }
+    $result['data']=$request->id;
+    return view("product.addImg")->with('result', $result);
+
+}
+
+public function uploadImg(Request $request)
+    {
+       
+        $image = $request->file('file');
+        $imageName = $image->getClientOriginalName();
+        $image->move(public_path('images'),$imageName);
+        
+    
+        return response()->json(['success'=>$imageName]);
+    }
+ 
+ function fetchImg()
+    {
+     $images = \File::allFiles(public_path('images'));
+     $output = '<div class="row">';
+     foreach($images as $image)
+     {
+      $output .= '<div class="col-md-2">
+                <img src="'.asset('images/' . $image->getFilename()).'" class="img-thumbnail" width="150" height="150"/>
+                <button type="button" class="btn btn-link remove_image" id="'.$image->getFilename().'">Remove</button>
+            </div>';
+     }
+     $output .= '</div>';
+     echo $output;
+    }
+ 
+    function deleteImg(Request $request)
+    {
+        $filename =  $request->get('filename');
+        ImageUpload::where('filename',$filename)->delete();
+        $path=public_path().'/images/'.$filename;
+        if (file_exists($path)) {
+            unlink($path);
+        }
+        return $filename;  
+    }
 
 
 public function editProduct(Request $request)
@@ -372,7 +480,7 @@ public function addNewNotification(Request $request)
     $addNewNotification = DB::table('notification_tbl')->insertGetId([
         'notification_title' => $request->notification_title,
         'notification_descr' => $request->notification_descr,
-        'user_id' => $request->user_id,
+        // 'user_id' => $request->user_id,
         'product_id' => $request->product_id
 
     ]);
@@ -390,12 +498,12 @@ public function editNotification(Request $request)
 
    
 
-    $listUser = DB::table('users')->orderBy('id', 'desc')->get();
+    // $listUser = DB::table('users')->orderBy('id', 'desc')->get();
     $listProduct = DB::table('product_tbl')->orderBy('product_id', 'desc')->get();
 
 
     return view('notification.editNotification')->with('editNotification', $editNotification)
-                                              ->with('listUser', $listUser)
+                                            //   ->with('listUser', $listUser)
                                               ->with('listProduct', $listProduct);
  
 }
@@ -408,7 +516,7 @@ public function updateNotification(Request $request)
                                  ->update([
                                     'notification_title' => $request->notification_title,
                                     'notification_descr' => $request->notification_descr,
-                                    'user_id' => $request->user_id,
+                                    // 'user_id' => $request->user_id,
                                     'product_id' => $request->product_id
 
                                              ]);

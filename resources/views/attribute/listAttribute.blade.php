@@ -51,6 +51,7 @@
                                     <tr>
                                         <th scope="col">{{ __('#') }}</th>
                                         <th scope="col">{{ __('Attribute Name') }}</th>
+                                        <th scope="col">{{ __('Values') }}</th>
                                         <th scope="col">{{ __('Action') }}</th>
 
                                     </tr>
@@ -60,7 +61,10 @@
                                     @foreach ($listAttribute as $key=>$user)
                                         <tr>
                                             <td>{{ $key+1}} </td>
+
                                             <td>{{ $user->attribute_name}} </td>
+
+                                            <td>{{ $user->va}} </td>
                                             <td >
                                            
                                             <a href="deleteAttribute/{{$user->attribute_id}}" 
@@ -70,6 +74,9 @@
                                             
                                             <a href="editAttribute/{{$user->attribute_id}}" class="btn btn-success btn-fab btn-fab-mini btn-round" role="button" aria-disabled="true">
                                              <i class="material-icons">edit</i></a>
+
+                                             <a href="addValue/{{$user->attribute_id}}" class="btn btn-primary btn-fab btn-fab-mini btn-round" role="button" aria-disabled="true">
+                                             <i class="material-icons">add_box</i></a>
                                             </td>
                                         </tr>
                                     @endforeach

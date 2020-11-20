@@ -26,56 +26,80 @@
             </div>
             <div class="card-body">               
             <div class="col-md-12">
+            
                 <form method="post" action="{{ route('product.addNewProduct') }}" autocomplete="off"  enctype="multipart/form-data">
                     @csrf
+
+
                     <div class="pl-lg-4">
 
 
 
-
+<div class="form-group">
                     <label for="id_label_multiple"> Select Values  </label>
 
   <select class="js-example-basic-multiple js-states form-control select2" id="id_label_multiple" multiple="multiple">
                                 
+                                @foreach ($listAttr as $key=>$f)
+                                <optgroup label="{{$f->attribute_name}}">
                                 @foreach ($listVal as $key=>$b)
-                                <option value="{{$b->value_id}}">{{$b->attribute_name}} -- {{$b->value_name}}</option>
+                                @if($f->attribute_id == $b->attribute_id )
+                                
+                                <option value="{{$b->value_id}}">{{$b->value_name}}</option>
+                    @endif
+                                <!-- <option value="{{$b->value_id}}"> {{$b->value_name}}</option> -->
                                 @endforeach
+                                </optgroup>
+                                @endforeach
+
   </select>
+</div>
+
+<div class="form-group">
+
+  <label for="id_label_multiple"> Select Subcategory </label>
+
+<select class="js-example-basic-multiple js-states form-control select2" id="subcategory" multiple="multiple">
+                              
+                              @foreach ($listCat as $key=>$f)
+                              <optgroup label="{{$f->category_name}}">
+                              @foreach ($listSub as $key=>$b)
+                              @if($f->category_id == $b->category_id )
+                              
+                              <option value="{{$b->subcategory_id}}">{{$b->subcategory_name}}</option>
+                  @endif
+                              @endforeach
+                              </optgroup>
+                              @endforeach
+
+</select>
+</div>
 
 
-                    <div class="form-group">
-                            <label for="exampleFormControlSelect1">Select Subcategory</label>
-                            <select class="form-control select2" id="subcategory" name="subcategory_id"  required>
-                                <option value="">Select</option>
-
-                                @foreach ($listSub as $key=>$b)
-                                <option value="{{$b->subcategory_id}}">{{$b->subcategory_name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('product_name') ? ' has-danger' : '' }}">
+                 
+                        <div class="form-group">
                             <label class="form-control-label" for="input-name">Name </label>
-                            <br>
+                             
                             <input type="text" name="product_name" id="input-name"
-                                class="form-control form-control-alternative{{ $errors->has('product_name') ? ' is-invalid' : '' }}"
-                                placeholder="{{ __('Enter Here Product Name ') }}" value="{{ old('product_name') }}" required autofocus>
+                                class="form-control form-control-alternative"
+                                placeholder="{{ __('Enter Here Product Name ') }}" value="{{ old('product_name') }}" required >
 
                         </div>
-                        <div class="form-group{{ $errors->has('product_quantity') ? ' has-danger' : '' }}">
+
+                        <div class="form-group">
                             <label class="form-control-label" for="input-name">Quantity </label>
-                            <br>
+                             
                             <input type="number" name="product_quantity" id="input-name"
-                                class="form-control form-control-alternative{{ $errors->has('product_quantity') ? ' is-invalid' : '' }}"
-                                placeholder="{{ __('Enter Here Quantity') }}" value="{{ old('product_quantity') }}" required autofocus>
+                                class="form-control form-control-alternative"
+                                placeholder="{{ __('Enter Here Quantity') }}" value="{{ old('product_quantity') }}" required >
 
                         </div>
-                        <div class="form-group{{ $errors->has('product_price') ? ' has-danger' : '' }}">
+                        <div class="form-group">
                             <label class="form-control-label" for="input-name">Price </label>
-                            <br>
+                             
                             <input type="number" name="product_price" id="input-name"
-                                class="form-control form-control-alternative{{ $errors->has('product_price') ? ' is-invalid' : '' }}"
-                                placeholder="{{ __('Enter Here Price') }}" value="{{ old('product_price') }}" required autofocus>
+                                class="form-control form-control-alternative"
+                                placeholder="{{ __('Enter Here Price') }}" value="{{ old('product_price') }}" required >
 
                         </div>
                         

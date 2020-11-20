@@ -18,11 +18,11 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+Route::get('/home', [App\Http\Controllers\ProjectController::class, 'listCategory'])->name('home');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Auth::routes();
 
-Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home')->middleware('auth');
+// Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home')->middleware('auth');
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::get('table-list', function () {
@@ -89,6 +89,8 @@ Route::post('addNewAttribute',['as' => 'attribute.addNewAttribute', 'uses' => 'A
 Route::get('editAttribute/{id}', ['as' => 'attribute.editAttribute', 'uses' => 'App\Http\Controllers\ProjectController@editAttribute']);
 Route::post('updateAttribute',['as' => 'attribute.updateAttribute', 'uses' => 'App\Http\Controllers\ProjectController@updateAttribute']);
 Route::get('deleteAttribute/{id}',['as' => 'attribute.deleteAttribute', 'uses' => 'App\Http\Controllers\ProjectController@deleteAttribute']);
+Route::get('addValue/{id}', ['as' => 'attribute.addValue', 'uses' => 'App\Http\Controllers\ProjectController@addValue']);
+Route::post('updateValue',['as' => 'attribute.updateValue', 'uses' => 'App\Http\Controllers\ProjectController@updateValue']);
 
 
 // Start Product Route-------------------------------------------------------------->
@@ -100,6 +102,10 @@ Route::get('editProduct/{id}', ['as' => 'product.editProduct', 'uses' => 'App\Ht
 Route::post('updateProduct',['as' => 'product.updateProduct', 'uses' => 'App\Http\Controllers\ProjectController@updateProduct']);
 Route::get('deleteProduct/{id}',['as' => 'product.deleteProduct', 'uses' => 'App\Http\Controllers\ProjectController@deleteProduct']);
 
+Route::get('addImg/{id}', ['as' => 'product.addImg', 'uses' => 'App\Http\Controllers\ProjectController@addImg']);
+Route::post('uploadImg',['as' => 'product.uploadImg', 'uses' => 'App\Http\Controllers\ProjectController@uploadImg']);
+Route::get('fetchImg', ['as' => 'product.fetchImg', 'uses' => 'App\Http\Controllers\ProjectController@fetchImg']);
+Route::post('deleteImg', ['as' => 'product.deleteImg', 'uses' => 'App\Http\Controllers\ProjectController@deleteImg']);
 
 // Start Notification Route-------------------------------------------------------------->
 

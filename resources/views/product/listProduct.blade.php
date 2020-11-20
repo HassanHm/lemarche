@@ -78,6 +78,9 @@
                                             
                                             <a href="editProduct/{{$user->product_id}}" class="btn btn-success btn-fab btn-fab-mini btn-round" role="button" aria-disabled="true">
                                              <i class="material-icons">edit</i></a>
+                                             <a href="addImg/{{$user->product_id}}" class="btn btn-primary btn-small btn-round" role="button" aria-disabled="true">
+                                             add/edit images
+                                             </a>
 
 
                                             </td>

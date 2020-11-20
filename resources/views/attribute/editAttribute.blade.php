@@ -42,7 +42,32 @@
 
                         </div>
                         
+                     
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect1">Select Value</label>
+                            <select class="form-control select2" id="value_id1" name="value_id" >
+                                <option value="">Select</option>
 
+                                @foreach ($listVal as $key=>$b)
+
+                                <option  value="{{$b->value_id}}" >{{$b->value_name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
+                        <div class="pl-lg-4 values">
+                        <div class="form-group{{ $errors->has('value_name') ? ' has-danger' : '' }}">
+                            <label class="form-control-label" for="input-name">Value Name</label>
+                            <input type="text" name="value_name" id="value_name"
+                                class="form-control " 
+                                placeholder="{{ __('Enter Value Name') }}"   >
+
+                        </div>
+                        <input class="form-control" name="value_id" id="value_id" type="text" value=""  hidden/>
+
+                    
+                        
                         <div class="text-center">
                             <a href="{{ route('attribute.listAttribute') }}"  class="btn btn-warning mt-4">{{ __('Back') }}</a>
 
@@ -62,6 +87,44 @@
 
 @push('js')
     <script>
+
+// function fillData(){
+//     console.log($('#val').val())
+   
+
+//     console.log($("#val option:selected").text())
+//     $('input_value').val($("#val option:selected").text())
+
+// $('value_id').val($('#val').val())
+// }
+
+
+// $(function() {
+//    $('#value_id').on('change', function(){
+//        var price = $(this).data('price');
+//        $('#value_name').val(price);
+//    });
+// });
+
+var select = document.getElementById('value_id1');
+var input = document.getElementById('value_name');
+var id = document.getElementById('value_id');
+select.onchange = function() {
+    console.log($("#value_id1 option:selected").val())
+ if($("#value_id1 option:selected").val() != ''){
+     
+    input.value = $("#value_id1 option:selected").text();
+    id.value =$("#value_id1 option:selected").val();
+    $("#value_name").prop('required','required')
+ }
+ else{
+    input.value = ""
+    id.value = ""
+     $("#value_name").removeAttr("required");
+ }
+
+    
+}
 
     </script>
     @endpush
